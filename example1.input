@@ -1,0 +1,13 @@
+function void write(string str1)and(string str2);
+
+string s1;
+s1 = "Hello";
+string s2;
+s2 = "World!\n";
+write(s1)and(s2);
+
+function void write(string str1)and(string str2){
+	print str1;
+	print " ";
+	print str2;
+}

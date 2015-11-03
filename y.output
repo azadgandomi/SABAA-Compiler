@@ -1,0 +1,4068 @@
+Grammar
+
+    0 $accept: start $end
+
+    1 start: program
+
+    2 program: function_declaration_statement program function_definition_block
+    3        | main
+
+    4 main: statements
+
+    5 function_declaration_statement: FUNCTION function_declaration ';'
+
+    6 function_declaration: var_type function
+    7                     | var_type function IDENTIFIER
+    8                     | VOID function
+    9                     | VOID function IDENTIFIER
+
+   10 var_type: STRING
+   11         | NUMBER
+   12         | BOOLEAN
+
+   13 function: function IDENTIFIER params
+   14         | IDENTIFIER params
+
+   15 params: '(' param_list ')'
+   16       | '(' ')'
+
+   17 param_list: param_list ',' var_type IDENTIFIER
+   18           | var_type IDENTIFIER
+
+   19 $@1: %empty
+
+   20 function_definition_block: FUNCTION function_definition '{' $@1 statements '}'
+   21                          | FUNCTION function_definition '{' '}'
+
+   22 function_definition: var_type function
+   23                    | var_type function IDENTIFIER
+   24                    | VOID function
+   25                    | VOID function IDENTIFIER
+
+   26 statements: statements statement
+   27           | statement
+
+   28 $@2: %empty
+
+   29 statement: '{' $@2 statements '}'
+   30          | var_type IDENTIFIER ';'
+   31          | var_type IDENTIFIER '[' NUMBER_LITERAL ']' ';'
+   32          | WHILE '(' expression ')' while_statement
+   33          | IF '(' expression ')' statement
+   34          | IF '(' expression ')' statement ELSE statement
+   35          | IDENTIFIER '=' expression ';'
+   36          | PRINT expression ';'
+   37          | SCAN IDENTIFIER ';'
+   38          | IDENTIFIER INC_OP ';'
+   39          | IDENTIFIER DEC_OP ';'
+   40          | SUCCESSFUL EXIT ';'
+   41          | FAILED EXIT ';'
+   42          | function_call_statement ';'
+
+   43 $@3: %empty
+
+   44 while_statement: '{' $@3 while_statements '}'
+   45                | var_type IDENTIFIER ';'
+   46                | var_type IDENTIFIER '[' NUMBER_LITERAL ']' ';'
+   47                | WHILE '(' expression ')' while_statement
+   48                | IF '(' expression ')' statement
+   49                | IF '(' expression ')' statement ELSE statement
+   50                | IDENTIFIER '=' expression ';'
+   51                | PRINT expression ';'
+   52                | SCAN IDENTIFIER ';'
+   53                | IDENTIFIER INC_OP ';'
+   54                | IDENTIFIER DEC_OP ';'
+   55                | BREAK ';'
+   56                | CONTINUE ';'
+   57                | SUCCESSFUL EXIT ';'
+   58                | FAILED EXIT ';'
+   59                | function_call_statement ';'
+
+   60 while_statements: while_statements while_statement
+   61                 | while_statement
+
+   62 expression: expression '+' expression
+   63           | expression '-' expression
+   64           | expression '*' expression
+   65           | expression '/' expression
+   66           | expression '%' expression
+   67           | IDENTIFIER INC_OP
+   68           | IDENTIFIER DEC_OP
+   69           | expression '>' expression
+   70           | expression '<' expression
+   71           | expression '&' expression
+   72           | expression '|' expression
+   73           | expression EQ_OP expression
+   74           | expression GE_OP expression
+   75           | expression LE_OP expression
+   76           | expression NE_OP expression
+   77           | '-' expression
+   78           | IDENTIFIER '[' expression ']'
+   79           | IDENTIFIER
+   80           | NUMBER_LITERAL
+   81           | STRING_LITERAL
+   82           | TRUE_LITERAL
+   83           | FALSE_LITERAL
+   84           | function_call_statement
+
+   85 function_call_statement: function_call
+   86                        | function_call IDENTIFIER
+
+   87 function_call: function_call IDENTIFIER args
+   88              | IDENTIFIER args
+
+   89 args: '(' arg_list ')'
+   90     | '(' ')'
+
+   91 arg_list: arg_list ',' expression
+   92         | expression
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'%' (37) 66
+'&' (38) 71
+'(' (40) 15 16 32 33 34 47 48 49 89 90
+')' (41) 15 16 32 33 34 47 48 49 89 90
+'*' (42) 64
+'+' (43) 62
+',' (44) 17 91
+'-' (45) 63 77
+'/' (47) 65
+';' (59) 5 30 31 35 36 37 38 39 40 41 42 45 46 50 51 52 53 54 55 56
+    57 58 59
+'<' (60) 70
+'=' (61) 35 50
+'>' (62) 69
+'[' (91) 31 46 78
+']' (93) 31 46 78
+'{' (123) 20 21 29 44
+'|' (124) 72
+'}' (125) 20 21 29 44
+error (256)
+IDENTIFIER (258) 7 9 13 14 17 18 23 25 30 31 35 37 38 39 45 46 50 52
+    53 54 67 68 78 79 86 87 88
+STRING_LITERAL (259) 81
+NUMBER_LITERAL (260) 31 46 80
+TRUE_LITERAL (261) 82
+FALSE_LITERAL (262) 83
+EXIT (263) 40 41 57 58
+NUMBER (264) 11
+STRING (265) 10
+BOOLEAN (266) 12
+VOID (267) 8 9 24 25
+FUNCTION (268) 5 20 21
+IF (269) 33 34 48 49
+ELSE (270) 34 49
+WHILE (271) 32 47
+BREAK (272) 55
+CONTINUE (273) 56
+PRINT (274) 36 51
+SCAN (275) 37 52
+EQ_OP (276) 73
+GE_OP (277) 74
+LE_OP (278) 75
+NE_OP (279) 76
+INC_OP (280) 38 53 67
+DEC_OP (281) 39 54 68
+SUCCESSFUL (282) 40 57
+FAILED (283) 41 58
+IFX (284)
+UNARY_MINUS (285)
+
+
+Nonterminals, with rules where they appear
+
+$accept (49)
+    on left: 0
+start (50)
+    on left: 1, on right: 0
+program (51)
+    on left: 2 3, on right: 1 2
+main (52)
+    on left: 4, on right: 3
+function_declaration_statement (53)
+    on left: 5, on right: 2
+function_declaration (54)
+    on left: 6 7 8 9, on right: 5
+var_type (55)
+    on left: 10 11 12, on right: 6 7 17 18 22 23 30 31 45 46
+function (56)
+    on left: 13 14, on right: 6 7 8 9 13 22 23 24 25
+params (57)
+    on left: 15 16, on right: 13 14
+param_list (58)
+    on left: 17 18, on right: 15 17
+function_definition_block (59)
+    on left: 20 21, on right: 2
+$@1 (60)
+    on left: 19, on right: 20
+function_definition (61)
+    on left: 22 23 24 25, on right: 20 21
+statements (62)
+    on left: 26 27, on right: 4 20 26 29
+statement (63)
+    on left: 29 30 31 32 33 34 35 36 37 38 39 40 41 42, on right: 26
+    27 33 34 48 49
+$@2 (64)
+    on left: 28, on right: 29
+while_statement (65)
+    on left: 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59, on right:
+    32 47 60 61
+$@3 (66)
+    on left: 43, on right: 44
+while_statements (67)
+    on left: 60 61, on right: 44 60
+expression (68)
+    on left: 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79
+    80 81 82 83 84, on right: 32 33 34 35 36 47 48 49 50 51 62 63 64
+    65 66 69 70 71 72 73 74 75 76 77 78 91 92
+function_call_statement (69)
+    on left: 85 86, on right: 42 59 84
+function_call (70)
+    on left: 87 88, on right: 85 86 87
+args (71)
+    on left: 89 90, on right: 87 88
+arg_list (72)
+    on left: 91 92, on right: 89 91
+
+
+State 0
+
+    0 $accept: . start $end
+    1 start: . program
+    2 program: . function_declaration_statement program function_definition_block
+    3        | . main
+    4 main: . statements
+    5 function_declaration_statement: . FUNCTION function_declaration ';'
+   10 var_type: . STRING
+   11         | . NUMBER
+   12         | . BOOLEAN
+   26 statements: . statements statement
+   27           | . statement
+   29 statement: . '{' $@2 statements '}'
+   30          | . var_type IDENTIFIER ';'
+   31          | . var_type IDENTIFIER '[' NUMBER_LITERAL ']' ';'
+   32          | . WHILE '(' expression ')' while_statement
+   33          | . IF '(' expression ')' statement
+   34          | . IF '(' expression ')' statement ELSE statement
+   35          | . IDENTIFIER '=' expression ';'
+   36          | . PRINT expression ';'
+   37          | . SCAN IDENTIFIER ';'
+   38          | . IDENTIFIER INC_OP ';'
+   39          | . IDENTIFIER DEC_OP ';'
+   40          | . SUCCESSFUL EXIT ';'
+   41          | . FAILED EXIT ';'
+   42          | . function_call_statement ';'
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER  shift, and go to state 1
+    NUMBER      shift, and go to state 2
+    STRING      shift, and go to state 3
+    BOOLEAN     shift, and go to state 4
+    FUNCTION    shift, and go to state 5
+    IF          shift, and go to state 6
+    WHILE       shift, and go to state 7
+    PRINT       shift, and go to state 8
+    SCAN        shift, and go to state 9
+    SUCCESSFUL  shift, and go to state 10
+    FAILED      shift, and go to state 11
+    '{'         shift, and go to state 12
+
+    start                           go to state 13
+    program                         go to state 14
+    main                            go to state 15
+    function_declaration_statement  go to state 16
+    var_type                        go to state 17
+    statements                      go to state 18
+    statement                       go to state 19
+    function_call_statement         go to state 20
+    function_call                   go to state 21
+
+
+State 1
+
+   35 statement: IDENTIFIER . '=' expression ';'
+   38          | IDENTIFIER . INC_OP ';'
+   39          | IDENTIFIER . DEC_OP ';'
+   88 function_call: IDENTIFIER . args
+   89 args: . '(' arg_list ')'
+   90     | . '(' ')'
+
+    INC_OP  shift, and go to state 22
+    DEC_OP  shift, and go to state 23
+    '('     shift, and go to state 24
+    '='     shift, and go to state 25
+
+    args  go to state 26
+
+
+State 2
+
+   11 var_type: NUMBER .
+
+    $default  reduce using rule 11 (var_type)
+
+
+State 3
+
+   10 var_type: STRING .
+
+    $default  reduce using rule 10 (var_type)
+
+
+State 4
+
+   12 var_type: BOOLEAN .
+
+    $default  reduce using rule 12 (var_type)
+
+
+State 5
+
+    5 function_declaration_statement: FUNCTION . function_declaration ';'
+    6 function_declaration: . var_type function
+    7                     | . var_type function IDENTIFIER
+    8                     | . VOID function
+    9                     | . VOID function IDENTIFIER
+   10 var_type: . STRING
+   11         | . NUMBER
+   12         | . BOOLEAN
+
+    NUMBER   shift, and go to state 2
+    STRING   shift, and go to state 3
+    BOOLEAN  shift, and go to state 4
+    VOID     shift, and go to state 27
+
+    function_declaration  go to state 28
+    var_type              go to state 29
+
+
+State 6
+
+   33 statement: IF . '(' expression ')' statement
+   34          | IF . '(' expression ')' statement ELSE statement
+
+    '('  shift, and go to state 30
+
+
+State 7
+
+   32 statement: WHILE . '(' expression ')' while_statement
+
+    '('  shift, and go to state 31
+
+
+State 8
+
+   36 statement: PRINT . expression ';'
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 38
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 9
+
+   37 statement: SCAN . IDENTIFIER ';'
+
+    IDENTIFIER  shift, and go to state 40
+
+
+State 10
+
+   40 statement: SUCCESSFUL . EXIT ';'
+
+    EXIT  shift, and go to state 41
+
+
+State 11
+
+   41 statement: FAILED . EXIT ';'
+
+    EXIT  shift, and go to state 42
+
+
+State 12
+
+   28 $@2: . %empty
+   29 statement: '{' . $@2 statements '}'
+
+    $default  reduce using rule 28 ($@2)
+
+    $@2  go to state 43
+
+
+State 13
+
+    0 $accept: start . $end
+
+    $end  shift, and go to state 44
+
+
+State 14
+
+    1 start: program .
+
+    $default  reduce using rule 1 (start)
+
+
+State 15
+
+    3 program: main .
+
+    $default  reduce using rule 3 (program)
+
+
+State 16
+
+    2 program: . function_declaration_statement program function_definition_block
+    2        | function_declaration_statement . program function_definition_block
+    3        | . main
+    4 main: . statements
+    5 function_declaration_statement: . FUNCTION function_declaration ';'
+   10 var_type: . STRING
+   11         | . NUMBER
+   12         | . BOOLEAN
+   26 statements: . statements statement
+   27           | . statement
+   29 statement: . '{' $@2 statements '}'
+   30          | . var_type IDENTIFIER ';'
+   31          | . var_type IDENTIFIER '[' NUMBER_LITERAL ']' ';'
+   32          | . WHILE '(' expression ')' while_statement
+   33          | . IF '(' expression ')' statement
+   34          | . IF '(' expression ')' statement ELSE statement
+   35          | . IDENTIFIER '=' expression ';'
+   36          | . PRINT expression ';'
+   37          | . SCAN IDENTIFIER ';'
+   38          | . IDENTIFIER INC_OP ';'
+   39          | . IDENTIFIER DEC_OP ';'
+   40          | . SUCCESSFUL EXIT ';'
+   41          | . FAILED EXIT ';'
+   42          | . function_call_statement ';'
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER  shift, and go to state 1
+    NUMBER      shift, and go to state 2
+    STRING      shift, and go to state 3
+    BOOLEAN     shift, and go to state 4
+    FUNCTION    shift, and go to state 5
+    IF          shift, and go to state 6
+    WHILE       shift, and go to state 7
+    PRINT       shift, and go to state 8
+    SCAN        shift, and go to state 9
+    SUCCESSFUL  shift, and go to state 10
+    FAILED      shift, and go to state 11
+    '{'         shift, and go to state 12
+
+    program                         go to state 45
+    main                            go to state 15
+    function_declaration_statement  go to state 16
+    var_type                        go to state 17
+    statements                      go to state 18
+    statement                       go to state 19
+    function_call_statement         go to state 20
+    function_call                   go to state 21
+
+
+State 17
+
+   30 statement: var_type . IDENTIFIER ';'
+   31          | var_type . IDENTIFIER '[' NUMBER_LITERAL ']' ';'
+
+    IDENTIFIER  shift, and go to state 46
+
+
+State 18
+
+    4 main: statements .  [$end, FUNCTION]
+   10 var_type: . STRING
+   11         | . NUMBER
+   12         | . BOOLEAN
+   26 statements: statements . statement
+   29 statement: . '{' $@2 statements '}'
+   30          | . var_type IDENTIFIER ';'
+   31          | . var_type IDENTIFIER '[' NUMBER_LITERAL ']' ';'
+   32          | . WHILE '(' expression ')' while_statement
+   33          | . IF '(' expression ')' statement
+   34          | . IF '(' expression ')' statement ELSE statement
+   35          | . IDENTIFIER '=' expression ';'
+   36          | . PRINT expression ';'
+   37          | . SCAN IDENTIFIER ';'
+   38          | . IDENTIFIER INC_OP ';'
+   39          | . IDENTIFIER DEC_OP ';'
+   40          | . SUCCESSFUL EXIT ';'
+   41          | . FAILED EXIT ';'
+   42          | . function_call_statement ';'
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER  shift, and go to state 1
+    NUMBER      shift, and go to state 2
+    STRING      shift, and go to state 3
+    BOOLEAN     shift, and go to state 4
+    IF          shift, and go to state 6
+    WHILE       shift, and go to state 7
+    PRINT       shift, and go to state 8
+    SCAN        shift, and go to state 9
+    SUCCESSFUL  shift, and go to state 10
+    FAILED      shift, and go to state 11
+    '{'         shift, and go to state 12
+
+    $default  reduce using rule 4 (main)
+
+    var_type                 go to state 17
+    statement                go to state 47
+    function_call_statement  go to state 20
+    function_call            go to state 21
+
+
+State 19
+
+   27 statements: statement .
+
+    $default  reduce using rule 27 (statements)
+
+
+State 20
+
+   42 statement: function_call_statement . ';'
+
+    ';'  shift, and go to state 48
+
+
+State 21
+
+   85 function_call_statement: function_call .  [EQ_OP, GE_OP, LE_OP, NE_OP, '|', '&', '>', '<', '+', '-', '*', '/', '%', ';', ')', ',', ']']
+   86                        | function_call . IDENTIFIER
+   87 function_call: function_call . IDENTIFIER args
+
+    IDENTIFIER  shift, and go to state 49
+
+    $default  reduce using rule 85 (function_call_statement)
+
+
+State 22
+
+   38 statement: IDENTIFIER INC_OP . ';'
+
+    ';'  shift, and go to state 50
+
+
+State 23
+
+   39 statement: IDENTIFIER DEC_OP . ';'
+
+    ';'  shift, and go to state 51
+
+
+State 24
+
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+   89 args: '(' . arg_list ')'
+   90     | '(' . ')'
+   91 arg_list: . arg_list ',' expression
+   92         | . expression
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+    ')'             shift, and go to state 52
+
+    expression               go to state 53
+    function_call_statement  go to state 39
+    function_call            go to state 21
+    arg_list                 go to state 54
+
+
+State 25
+
+   35 statement: IDENTIFIER '=' . expression ';'
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 55
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 26
+
+   88 function_call: IDENTIFIER args .
+
+    $default  reduce using rule 88 (function_call)
+
+
+State 27
+
+    8 function_declaration: VOID . function
+    9                     | VOID . function IDENTIFIER
+   13 function: . function IDENTIFIER params
+   14         | . IDENTIFIER params
+
+    IDENTIFIER  shift, and go to state 56
+
+    function  go to state 57
+
+
+State 28
+
+    5 function_declaration_statement: FUNCTION function_declaration . ';'
+
+    ';'  shift, and go to state 58
+
+
+State 29
+
+    6 function_declaration: var_type . function
+    7                     | var_type . function IDENTIFIER
+   13 function: . function IDENTIFIER params
+   14         | . IDENTIFIER params
+
+    IDENTIFIER  shift, and go to state 56
+
+    function  go to state 59
+
+
+State 30
+
+   33 statement: IF '(' . expression ')' statement
+   34          | IF '(' . expression ')' statement ELSE statement
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 60
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 31
+
+   32 statement: WHILE '(' . expression ')' while_statement
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 61
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 32
+
+   67 expression: IDENTIFIER . INC_OP
+   68           | IDENTIFIER . DEC_OP
+   78           | IDENTIFIER . '[' expression ']'
+   79           | IDENTIFIER .  [EQ_OP, GE_OP, LE_OP, NE_OP, '|', '&', '>', '<', '+', '-', '*', '/', '%', ';', ')', ',', ']']
+   88 function_call: IDENTIFIER . args
+   89 args: . '(' arg_list ')'
+   90     | . '(' ')'
+
+    INC_OP  shift, and go to state 62
+    DEC_OP  shift, and go to state 63
+    '('     shift, and go to state 24
+    '['     shift, and go to state 64
+
+    $default  reduce using rule 79 (expression)
+
+    args  go to state 26
+
+
+State 33
+
+   81 expression: STRING_LITERAL .
+
+    $default  reduce using rule 81 (expression)
+
+
+State 34
+
+   80 expression: NUMBER_LITERAL .
+
+    $default  reduce using rule 80 (expression)
+
+
+State 35
+
+   82 expression: TRUE_LITERAL .
+
+    $default  reduce using rule 82 (expression)
+
+
+State 36
+
+   83 expression: FALSE_LITERAL .
+
+    $default  reduce using rule 83 (expression)
+
+
+State 37
+
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   77           | '-' . expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 65
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 38
+
+   36 statement: PRINT expression . ';'
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+
+    EQ_OP  shift, and go to state 66
+    GE_OP  shift, and go to state 67
+    LE_OP  shift, and go to state 68
+    NE_OP  shift, and go to state 69
+    '|'    shift, and go to state 70
+    '&'    shift, and go to state 71
+    '>'    shift, and go to state 72
+    '<'    shift, and go to state 73
+    '+'    shift, and go to state 74
+    '-'    shift, and go to state 75
+    '*'    shift, and go to state 76
+    '/'    shift, and go to state 77
+    '%'    shift, and go to state 78
+    ';'    shift, and go to state 79
+
+
+State 39
+
+   84 expression: function_call_statement .
+
+    $default  reduce using rule 84 (expression)
+
+
+State 40
+
+   37 statement: SCAN IDENTIFIER . ';'
+
+    ';'  shift, and go to state 80
+
+
+State 41
+
+   40 statement: SUCCESSFUL EXIT . ';'
+
+    ';'  shift, and go to state 81
+
+
+State 42
+
+   41 statement: FAILED EXIT . ';'
+
+    ';'  shift, and go to state 82
+
+
+State 43
+
+   10 var_type: . STRING
+   11         | . NUMBER
+   12         | . BOOLEAN
+   26 statements: . statements statement
+   27           | . statement
+   29 statement: . '{' $@2 statements '}'
+   29          | '{' $@2 . statements '}'
+   30          | . var_type IDENTIFIER ';'
+   31          | . var_type IDENTIFIER '[' NUMBER_LITERAL ']' ';'
+   32          | . WHILE '(' expression ')' while_statement
+   33          | . IF '(' expression ')' statement
+   34          | . IF '(' expression ')' statement ELSE statement
+   35          | . IDENTIFIER '=' expression ';'
+   36          | . PRINT expression ';'
+   37          | . SCAN IDENTIFIER ';'
+   38          | . IDENTIFIER INC_OP ';'
+   39          | . IDENTIFIER DEC_OP ';'
+   40          | . SUCCESSFUL EXIT ';'
+   41          | . FAILED EXIT ';'
+   42          | . function_call_statement ';'
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER  shift, and go to state 1
+    NUMBER      shift, and go to state 2
+    STRING      shift, and go to state 3
+    BOOLEAN     shift, and go to state 4
+    IF          shift, and go to state 6
+    WHILE       shift, and go to state 7
+    PRINT       shift, and go to state 8
+    SCAN        shift, and go to state 9
+    SUCCESSFUL  shift, and go to state 10
+    FAILED      shift, and go to state 11
+    '{'         shift, and go to state 12
+
+    var_type                 go to state 17
+    statements               go to state 83
+    statement                go to state 19
+    function_call_statement  go to state 20
+    function_call            go to state 21
+
+
+State 44
+
+    0 $accept: start $end .
+
+    $default  accept
+
+
+State 45
+
+    2 program: function_declaration_statement program . function_definition_block
+   20 function_definition_block: . FUNCTION function_definition '{' $@1 statements '}'
+   21                          | . FUNCTION function_definition '{' '}'
+
+    FUNCTION  shift, and go to state 84
+
+    function_definition_block  go to state 85
+
+
+State 46
+
+   30 statement: var_type IDENTIFIER . ';'
+   31          | var_type IDENTIFIER . '[' NUMBER_LITERAL ']' ';'
+
+    ';'  shift, and go to state 86
+    '['  shift, and go to state 87
+
+
+State 47
+
+   26 statements: statements statement .
+
+    $default  reduce using rule 26 (statements)
+
+
+State 48
+
+   42 statement: function_call_statement ';' .
+
+    $default  reduce using rule 42 (statement)
+
+
+State 49
+
+   86 function_call_statement: function_call IDENTIFIER .  [EQ_OP, GE_OP, LE_OP, NE_OP, '|', '&', '>', '<', '+', '-', '*', '/', '%', ';', ')', ',', ']']
+   87 function_call: function_call IDENTIFIER . args
+   89 args: . '(' arg_list ')'
+   90     | . '(' ')'
+
+    '('  shift, and go to state 24
+
+    $default  reduce using rule 86 (function_call_statement)
+
+    args  go to state 88
+
+
+State 50
+
+   38 statement: IDENTIFIER INC_OP ';' .
+
+    $default  reduce using rule 38 (statement)
+
+
+State 51
+
+   39 statement: IDENTIFIER DEC_OP ';' .
+
+    $default  reduce using rule 39 (statement)
+
+
+State 52
+
+   90 args: '(' ')' .
+
+    $default  reduce using rule 90 (args)
+
+
+State 53
+
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+   92 arg_list: expression .  [')', ',']
+
+    EQ_OP  shift, and go to state 66
+    GE_OP  shift, and go to state 67
+    LE_OP  shift, and go to state 68
+    NE_OP  shift, and go to state 69
+    '|'    shift, and go to state 70
+    '&'    shift, and go to state 71
+    '>'    shift, and go to state 72
+    '<'    shift, and go to state 73
+    '+'    shift, and go to state 74
+    '-'    shift, and go to state 75
+    '*'    shift, and go to state 76
+    '/'    shift, and go to state 77
+    '%'    shift, and go to state 78
+
+    $default  reduce using rule 92 (arg_list)
+
+
+State 54
+
+   89 args: '(' arg_list . ')'
+   91 arg_list: arg_list . ',' expression
+
+    ')'  shift, and go to state 89
+    ','  shift, and go to state 90
+
+
+State 55
+
+   35 statement: IDENTIFIER '=' expression . ';'
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+
+    EQ_OP  shift, and go to state 66
+    GE_OP  shift, and go to state 67
+    LE_OP  shift, and go to state 68
+    NE_OP  shift, and go to state 69
+    '|'    shift, and go to state 70
+    '&'    shift, and go to state 71
+    '>'    shift, and go to state 72
+    '<'    shift, and go to state 73
+    '+'    shift, and go to state 74
+    '-'    shift, and go to state 75
+    '*'    shift, and go to state 76
+    '/'    shift, and go to state 77
+    '%'    shift, and go to state 78
+    ';'    shift, and go to state 91
+
+
+State 56
+
+   14 function: IDENTIFIER . params
+   15 params: . '(' param_list ')'
+   16       | . '(' ')'
+
+    '('  shift, and go to state 92
+
+    params  go to state 93
+
+
+State 57
+
+    8 function_declaration: VOID function .  [';']
+    9                     | VOID function . IDENTIFIER
+   13 function: function . IDENTIFIER params
+
+    IDENTIFIER  shift, and go to state 94
+
+    $default  reduce using rule 8 (function_declaration)
+
+
+State 58
+
+    5 function_declaration_statement: FUNCTION function_declaration ';' .
+
+    $default  reduce using rule 5 (function_declaration_statement)
+
+
+State 59
+
+    6 function_declaration: var_type function .  [';']
+    7                     | var_type function . IDENTIFIER
+   13 function: function . IDENTIFIER params
+
+    IDENTIFIER  shift, and go to state 95
+
+    $default  reduce using rule 6 (function_declaration)
+
+
+State 60
+
+   33 statement: IF '(' expression . ')' statement
+   34          | IF '(' expression . ')' statement ELSE statement
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+
+    EQ_OP  shift, and go to state 66
+    GE_OP  shift, and go to state 67
+    LE_OP  shift, and go to state 68
+    NE_OP  shift, and go to state 69
+    '|'    shift, and go to state 70
+    '&'    shift, and go to state 71
+    '>'    shift, and go to state 72
+    '<'    shift, and go to state 73
+    '+'    shift, and go to state 74
+    '-'    shift, and go to state 75
+    '*'    shift, and go to state 76
+    '/'    shift, and go to state 77
+    '%'    shift, and go to state 78
+    ')'    shift, and go to state 96
+
+
+State 61
+
+   32 statement: WHILE '(' expression . ')' while_statement
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+
+    EQ_OP  shift, and go to state 66
+    GE_OP  shift, and go to state 67
+    LE_OP  shift, and go to state 68
+    NE_OP  shift, and go to state 69
+    '|'    shift, and go to state 70
+    '&'    shift, and go to state 71
+    '>'    shift, and go to state 72
+    '<'    shift, and go to state 73
+    '+'    shift, and go to state 74
+    '-'    shift, and go to state 75
+    '*'    shift, and go to state 76
+    '/'    shift, and go to state 77
+    '%'    shift, and go to state 78
+    ')'    shift, and go to state 97
+
+
+State 62
+
+   67 expression: IDENTIFIER INC_OP .
+
+    $default  reduce using rule 67 (expression)
+
+
+State 63
+
+   68 expression: IDENTIFIER DEC_OP .
+
+    $default  reduce using rule 68 (expression)
+
+
+State 64
+
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   78           | IDENTIFIER '[' . expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 98
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 65
+
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+   77           | '-' expression .  [EQ_OP, GE_OP, LE_OP, NE_OP, '|', '&', '>', '<', '+', '-', '*', '/', '%', ';', ')', ',', ']']
+
+    $default  reduce using rule 77 (expression)
+
+    Conflict between rule 77 and token EQ_OP resolved as reduce (EQ_OP < UNARY_MINUS).
+    Conflict between rule 77 and token GE_OP resolved as reduce (GE_OP < UNARY_MINUS).
+    Conflict between rule 77 and token LE_OP resolved as reduce (LE_OP < UNARY_MINUS).
+    Conflict between rule 77 and token NE_OP resolved as reduce (NE_OP < UNARY_MINUS).
+    Conflict between rule 77 and token '|' resolved as reduce ('|' < UNARY_MINUS).
+    Conflict between rule 77 and token '&' resolved as reduce ('&' < UNARY_MINUS).
+    Conflict between rule 77 and token '>' resolved as reduce ('>' < UNARY_MINUS).
+    Conflict between rule 77 and token '<' resolved as reduce ('<' < UNARY_MINUS).
+    Conflict between rule 77 and token '+' resolved as reduce ('+' < UNARY_MINUS).
+    Conflict between rule 77 and token '-' resolved as reduce ('-' < UNARY_MINUS).
+    Conflict between rule 77 and token '*' resolved as reduce ('*' < UNARY_MINUS).
+    Conflict between rule 77 and token '/' resolved as reduce ('/' < UNARY_MINUS).
+    Conflict between rule 77 and token '%' resolved as reduce ('%' < UNARY_MINUS).
+
+
+State 66
+
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   73           | expression EQ_OP . expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 99
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 67
+
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   74           | expression GE_OP . expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 100
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 68
+
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   75           | expression LE_OP . expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 101
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 69
+
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   76           | expression NE_OP . expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 102
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 70
+
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   72           | expression '|' . expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 103
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 71
+
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   71           | expression '&' . expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 104
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 72
+
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   69           | expression '>' . expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 105
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 73
+
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   70           | expression '<' . expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 106
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 74
+
+   62 expression: . expression '+' expression
+   62           | expression '+' . expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 107
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 75
+
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   63           | expression '-' . expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 108
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 76
+
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   64           | expression '*' . expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 109
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 77
+
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   65           | expression '/' . expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 110
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 78
+
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   66           | expression '%' . expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 111
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 79
+
+   36 statement: PRINT expression ';' .
+
+    $default  reduce using rule 36 (statement)
+
+
+State 80
+
+   37 statement: SCAN IDENTIFIER ';' .
+
+    $default  reduce using rule 37 (statement)
+
+
+State 81
+
+   40 statement: SUCCESSFUL EXIT ';' .
+
+    $default  reduce using rule 40 (statement)
+
+
+State 82
+
+   41 statement: FAILED EXIT ';' .
+
+    $default  reduce using rule 41 (statement)
+
+
+State 83
+
+   10 var_type: . STRING
+   11         | . NUMBER
+   12         | . BOOLEAN
+   26 statements: statements . statement
+   29 statement: . '{' $@2 statements '}'
+   29          | '{' $@2 statements . '}'
+   30          | . var_type IDENTIFIER ';'
+   31          | . var_type IDENTIFIER '[' NUMBER_LITERAL ']' ';'
+   32          | . WHILE '(' expression ')' while_statement
+   33          | . IF '(' expression ')' statement
+   34          | . IF '(' expression ')' statement ELSE statement
+   35          | . IDENTIFIER '=' expression ';'
+   36          | . PRINT expression ';'
+   37          | . SCAN IDENTIFIER ';'
+   38          | . IDENTIFIER INC_OP ';'
+   39          | . IDENTIFIER DEC_OP ';'
+   40          | . SUCCESSFUL EXIT ';'
+   41          | . FAILED EXIT ';'
+   42          | . function_call_statement ';'
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER  shift, and go to state 1
+    NUMBER      shift, and go to state 2
+    STRING      shift, and go to state 3
+    BOOLEAN     shift, and go to state 4
+    IF          shift, and go to state 6
+    WHILE       shift, and go to state 7
+    PRINT       shift, and go to state 8
+    SCAN        shift, and go to state 9
+    SUCCESSFUL  shift, and go to state 10
+    FAILED      shift, and go to state 11
+    '{'         shift, and go to state 12
+    '}'         shift, and go to state 112
+
+    var_type                 go to state 17
+    statement                go to state 47
+    function_call_statement  go to state 20
+    function_call            go to state 21
+
+
+State 84
+
+   10 var_type: . STRING
+   11         | . NUMBER
+   12         | . BOOLEAN
+   20 function_definition_block: FUNCTION . function_definition '{' $@1 statements '}'
+   21                          | FUNCTION . function_definition '{' '}'
+   22 function_definition: . var_type function
+   23                    | . var_type function IDENTIFIER
+   24                    | . VOID function
+   25                    | . VOID function IDENTIFIER
+
+    NUMBER   shift, and go to state 2
+    STRING   shift, and go to state 3
+    BOOLEAN  shift, and go to state 4
+    VOID     shift, and go to state 113
+
+    var_type             go to state 114
+    function_definition  go to state 115
+
+
+State 85
+
+    2 program: function_declaration_statement program function_definition_block .
+
+    $default  reduce using rule 2 (program)
+
+
+State 86
+
+   30 statement: var_type IDENTIFIER ';' .
+
+    $default  reduce using rule 30 (statement)
+
+
+State 87
+
+   31 statement: var_type IDENTIFIER '[' . NUMBER_LITERAL ']' ';'
+
+    NUMBER_LITERAL  shift, and go to state 116
+
+
+State 88
+
+   87 function_call: function_call IDENTIFIER args .
+
+    $default  reduce using rule 87 (function_call)
+
+
+State 89
+
+   89 args: '(' arg_list ')' .
+
+    $default  reduce using rule 89 (args)
+
+
+State 90
+
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+   91 arg_list: arg_list ',' . expression
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 117
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 91
+
+   35 statement: IDENTIFIER '=' expression ';' .
+
+    $default  reduce using rule 35 (statement)
+
+
+State 92
+
+   10 var_type: . STRING
+   11         | . NUMBER
+   12         | . BOOLEAN
+   15 params: '(' . param_list ')'
+   16       | '(' . ')'
+   17 param_list: . param_list ',' var_type IDENTIFIER
+   18           | . var_type IDENTIFIER
+
+    NUMBER   shift, and go to state 2
+    STRING   shift, and go to state 3
+    BOOLEAN  shift, and go to state 4
+    ')'      shift, and go to state 118
+
+    var_type    go to state 119
+    param_list  go to state 120
+
+
+State 93
+
+   14 function: IDENTIFIER params .
+
+    $default  reduce using rule 14 (function)
+
+
+State 94
+
+    9 function_declaration: VOID function IDENTIFIER .  [';']
+   13 function: function IDENTIFIER . params
+   15 params: . '(' param_list ')'
+   16       | . '(' ')'
+
+    '('  shift, and go to state 92
+
+    $default  reduce using rule 9 (function_declaration)
+
+    params  go to state 121
+
+
+State 95
+
+    7 function_declaration: var_type function IDENTIFIER .  [';']
+   13 function: function IDENTIFIER . params
+   15 params: . '(' param_list ')'
+   16       | . '(' ')'
+
+    '('  shift, and go to state 92
+
+    $default  reduce using rule 7 (function_declaration)
+
+    params  go to state 121
+
+
+State 96
+
+   10 var_type: . STRING
+   11         | . NUMBER
+   12         | . BOOLEAN
+   29 statement: . '{' $@2 statements '}'
+   30          | . var_type IDENTIFIER ';'
+   31          | . var_type IDENTIFIER '[' NUMBER_LITERAL ']' ';'
+   32          | . WHILE '(' expression ')' while_statement
+   33          | . IF '(' expression ')' statement
+   33          | IF '(' expression ')' . statement
+   34          | . IF '(' expression ')' statement ELSE statement
+   34          | IF '(' expression ')' . statement ELSE statement
+   35          | . IDENTIFIER '=' expression ';'
+   36          | . PRINT expression ';'
+   37          | . SCAN IDENTIFIER ';'
+   38          | . IDENTIFIER INC_OP ';'
+   39          | . IDENTIFIER DEC_OP ';'
+   40          | . SUCCESSFUL EXIT ';'
+   41          | . FAILED EXIT ';'
+   42          | . function_call_statement ';'
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER  shift, and go to state 1
+    NUMBER      shift, and go to state 2
+    STRING      shift, and go to state 3
+    BOOLEAN     shift, and go to state 4
+    IF          shift, and go to state 6
+    WHILE       shift, and go to state 7
+    PRINT       shift, and go to state 8
+    SCAN        shift, and go to state 9
+    SUCCESSFUL  shift, and go to state 10
+    FAILED      shift, and go to state 11
+    '{'         shift, and go to state 12
+
+    var_type                 go to state 17
+    statement                go to state 122
+    function_call_statement  go to state 20
+    function_call            go to state 21
+
+
+State 97
+
+   10 var_type: . STRING
+   11         | . NUMBER
+   12         | . BOOLEAN
+   32 statement: WHILE '(' expression ')' . while_statement
+   44 while_statement: . '{' $@3 while_statements '}'
+   45                | . var_type IDENTIFIER ';'
+   46                | . var_type IDENTIFIER '[' NUMBER_LITERAL ']' ';'
+   47                | . WHILE '(' expression ')' while_statement
+   48                | . IF '(' expression ')' statement
+   49                | . IF '(' expression ')' statement ELSE statement
+   50                | . IDENTIFIER '=' expression ';'
+   51                | . PRINT expression ';'
+   52                | . SCAN IDENTIFIER ';'
+   53                | . IDENTIFIER INC_OP ';'
+   54                | . IDENTIFIER DEC_OP ';'
+   55                | . BREAK ';'
+   56                | . CONTINUE ';'
+   57                | . SUCCESSFUL EXIT ';'
+   58                | . FAILED EXIT ';'
+   59                | . function_call_statement ';'
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER  shift, and go to state 123
+    NUMBER      shift, and go to state 2
+    STRING      shift, and go to state 3
+    BOOLEAN     shift, and go to state 4
+    IF          shift, and go to state 124
+    WHILE       shift, and go to state 125
+    BREAK       shift, and go to state 126
+    CONTINUE    shift, and go to state 127
+    PRINT       shift, and go to state 128
+    SCAN        shift, and go to state 129
+    SUCCESSFUL  shift, and go to state 130
+    FAILED      shift, and go to state 131
+    '{'         shift, and go to state 132
+
+    var_type                 go to state 133
+    while_statement          go to state 134
+    function_call_statement  go to state 135
+    function_call            go to state 21
+
+
+State 98
+
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+   78           | IDENTIFIER '[' expression . ']'
+
+    EQ_OP  shift, and go to state 66
+    GE_OP  shift, and go to state 67
+    LE_OP  shift, and go to state 68
+    NE_OP  shift, and go to state 69
+    '|'    shift, and go to state 70
+    '&'    shift, and go to state 71
+    '>'    shift, and go to state 72
+    '<'    shift, and go to state 73
+    '+'    shift, and go to state 74
+    '-'    shift, and go to state 75
+    '*'    shift, and go to state 76
+    '/'    shift, and go to state 77
+    '%'    shift, and go to state 78
+    ']'    shift, and go to state 136
+
+
+State 99
+
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   73           | expression EQ_OP expression .  ['|', '&', ';', ')', ',', ']']
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+
+    EQ_OP  error (nonassociative)
+    GE_OP  error (nonassociative)
+    LE_OP  error (nonassociative)
+    NE_OP  error (nonassociative)
+    '>'    error (nonassociative)
+    '<'    error (nonassociative)
+
+    $default  reduce using rule 73 (expression)
+
+    Conflict between rule 73 and token EQ_OP resolved as an error (%nonassoc EQ_OP).
+    Conflict between rule 73 and token GE_OP resolved as an error (%nonassoc GE_OP).
+    Conflict between rule 73 and token LE_OP resolved as an error (%nonassoc LE_OP).
+    Conflict between rule 73 and token NE_OP resolved as an error (%nonassoc NE_OP).
+    Conflict between rule 73 and token '|' resolved as reduce ('|' < EQ_OP).
+    Conflict between rule 73 and token '&' resolved as reduce ('&' < EQ_OP).
+    Conflict between rule 73 and token '>' resolved as an error (%nonassoc '>').
+    Conflict between rule 73 and token '<' resolved as an error (%nonassoc '<').
+    Conflict between rule 73 and token '+' resolved as shift (EQ_OP < '+').
+    Conflict between rule 73 and token '-' resolved as shift (EQ_OP < '-').
+    Conflict between rule 73 and token '*' resolved as shift (EQ_OP < '*').
+    Conflict between rule 73 and token '/' resolved as shift (EQ_OP < '/').
+    Conflict between rule 73 and token '%' resolved as shift (EQ_OP < '%').
+
+
+State 100
+
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   74           | expression GE_OP expression .  ['|', '&', ';', ')', ',', ']']
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+
+    EQ_OP  error (nonassociative)
+    GE_OP  error (nonassociative)
+    LE_OP  error (nonassociative)
+    NE_OP  error (nonassociative)
+    '>'    error (nonassociative)
+    '<'    error (nonassociative)
+
+    $default  reduce using rule 74 (expression)
+
+    Conflict between rule 74 and token EQ_OP resolved as an error (%nonassoc EQ_OP).
+    Conflict between rule 74 and token GE_OP resolved as an error (%nonassoc GE_OP).
+    Conflict between rule 74 and token LE_OP resolved as an error (%nonassoc LE_OP).
+    Conflict between rule 74 and token NE_OP resolved as an error (%nonassoc NE_OP).
+    Conflict between rule 74 and token '|' resolved as reduce ('|' < GE_OP).
+    Conflict between rule 74 and token '&' resolved as reduce ('&' < GE_OP).
+    Conflict between rule 74 and token '>' resolved as an error (%nonassoc '>').
+    Conflict between rule 74 and token '<' resolved as an error (%nonassoc '<').
+    Conflict between rule 74 and token '+' resolved as shift (GE_OP < '+').
+    Conflict between rule 74 and token '-' resolved as shift (GE_OP < '-').
+    Conflict between rule 74 and token '*' resolved as shift (GE_OP < '*').
+    Conflict between rule 74 and token '/' resolved as shift (GE_OP < '/').
+    Conflict between rule 74 and token '%' resolved as shift (GE_OP < '%').
+
+
+State 101
+
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   75           | expression LE_OP expression .  ['|', '&', ';', ')', ',', ']']
+   76           | expression . NE_OP expression
+
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+
+    EQ_OP  error (nonassociative)
+    GE_OP  error (nonassociative)
+    LE_OP  error (nonassociative)
+    NE_OP  error (nonassociative)
+    '>'    error (nonassociative)
+    '<'    error (nonassociative)
+
+    $default  reduce using rule 75 (expression)
+
+    Conflict between rule 75 and token EQ_OP resolved as an error (%nonassoc EQ_OP).
+    Conflict between rule 75 and token GE_OP resolved as an error (%nonassoc GE_OP).
+    Conflict between rule 75 and token LE_OP resolved as an error (%nonassoc LE_OP).
+    Conflict between rule 75 and token NE_OP resolved as an error (%nonassoc NE_OP).
+    Conflict between rule 75 and token '|' resolved as reduce ('|' < LE_OP).
+    Conflict between rule 75 and token '&' resolved as reduce ('&' < LE_OP).
+    Conflict between rule 75 and token '>' resolved as an error (%nonassoc '>').
+    Conflict between rule 75 and token '<' resolved as an error (%nonassoc '<').
+    Conflict between rule 75 and token '+' resolved as shift (LE_OP < '+').
+    Conflict between rule 75 and token '-' resolved as shift (LE_OP < '-').
+    Conflict between rule 75 and token '*' resolved as shift (LE_OP < '*').
+    Conflict between rule 75 and token '/' resolved as shift (LE_OP < '/').
+    Conflict between rule 75 and token '%' resolved as shift (LE_OP < '%').
+
+
+State 102
+
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+   76           | expression NE_OP expression .  ['|', '&', ';', ')', ',', ']']
+
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+
+    EQ_OP  error (nonassociative)
+    GE_OP  error (nonassociative)
+    LE_OP  error (nonassociative)
+    NE_OP  error (nonassociative)
+    '>'    error (nonassociative)
+    '<'    error (nonassociative)
+
+    $default  reduce using rule 76 (expression)
+
+    Conflict between rule 76 and token EQ_OP resolved as an error (%nonassoc EQ_OP).
+    Conflict between rule 76 and token GE_OP resolved as an error (%nonassoc GE_OP).
+    Conflict between rule 76 and token LE_OP resolved as an error (%nonassoc LE_OP).
+    Conflict between rule 76 and token NE_OP resolved as an error (%nonassoc NE_OP).
+    Conflict between rule 76 and token '|' resolved as reduce ('|' < NE_OP).
+    Conflict between rule 76 and token '&' resolved as reduce ('&' < NE_OP).
+    Conflict between rule 76 and token '>' resolved as an error (%nonassoc '>').
+    Conflict between rule 76 and token '<' resolved as an error (%nonassoc '<').
+    Conflict between rule 76 and token '+' resolved as shift (NE_OP < '+').
+    Conflict between rule 76 and token '-' resolved as shift (NE_OP < '-').
+    Conflict between rule 76 and token '*' resolved as shift (NE_OP < '*').
+    Conflict between rule 76 and token '/' resolved as shift (NE_OP < '/').
+    Conflict between rule 76 and token '%' resolved as shift (NE_OP < '%').
+
+
+State 103
+
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   72           | expression '|' expression .  ['|', '&', ';', ')', ',', ']']
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+
+    EQ_OP  shift, and go to state 66
+    GE_OP  shift, and go to state 67
+    LE_OP  shift, and go to state 68
+    NE_OP  shift, and go to state 69
+    '>'    shift, and go to state 72
+    '<'    shift, and go to state 73
+    '+'    shift, and go to state 74
+    '-'    shift, and go to state 75
+    '*'    shift, and go to state 76
+    '/'    shift, and go to state 77
+    '%'    shift, and go to state 78
+
+    $default  reduce using rule 72 (expression)
+
+    Conflict between rule 72 and token EQ_OP resolved as shift ('|' < EQ_OP).
+    Conflict between rule 72 and token GE_OP resolved as shift ('|' < GE_OP).
+    Conflict between rule 72 and token LE_OP resolved as shift ('|' < LE_OP).
+    Conflict between rule 72 and token NE_OP resolved as shift ('|' < NE_OP).
+    Conflict between rule 72 and token '|' resolved as reduce (%left '|').
+    Conflict between rule 72 and token '&' resolved as reduce (%left '&').
+    Conflict between rule 72 and token '>' resolved as shift ('|' < '>').
+    Conflict between rule 72 and token '<' resolved as shift ('|' < '<').
+    Conflict between rule 72 and token '+' resolved as shift ('|' < '+').
+    Conflict between rule 72 and token '-' resolved as shift ('|' < '-').
+    Conflict between rule 72 and token '*' resolved as shift ('|' < '*').
+    Conflict between rule 72 and token '/' resolved as shift ('|' < '/').
+    Conflict between rule 72 and token '%' resolved as shift ('|' < '%').
+
+
+State 104
+
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   71           | expression '&' expression .  ['|', '&', ';', ')', ',', ']']
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+
+    EQ_OP  shift, and go to state 66
+    GE_OP  shift, and go to state 67
+    LE_OP  shift, and go to state 68
+    NE_OP  shift, and go to state 69
+    '>'    shift, and go to state 72
+    '<'    shift, and go to state 73
+    '+'    shift, and go to state 74
+    '-'    shift, and go to state 75
+    '*'    shift, and go to state 76
+    '/'    shift, and go to state 77
+    '%'    shift, and go to state 78
+
+    $default  reduce using rule 71 (expression)
+
+    Conflict between rule 71 and token EQ_OP resolved as shift ('&' < EQ_OP).
+    Conflict between rule 71 and token GE_OP resolved as shift ('&' < GE_OP).
+    Conflict between rule 71 and token LE_OP resolved as shift ('&' < LE_OP).
+    Conflict between rule 71 and token NE_OP resolved as shift ('&' < NE_OP).
+    Conflict between rule 71 and token '|' resolved as reduce (%left '|').
+    Conflict between rule 71 and token '&' resolved as reduce (%left '&').
+    Conflict between rule 71 and token '>' resolved as shift ('&' < '>').
+    Conflict between rule 71 and token '<' resolved as shift ('&' < '<').
+    Conflict between rule 71 and token '+' resolved as shift ('&' < '+').
+    Conflict between rule 71 and token '-' resolved as shift ('&' < '-').
+    Conflict between rule 71 and token '*' resolved as shift ('&' < '*').
+    Conflict between rule 71 and token '/' resolved as shift ('&' < '/').
+    Conflict between rule 71 and token '%' resolved as shift ('&' < '%').
+
+
+State 105
+
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   69           | expression '>' expression .  ['|', '&', ';', ')', ',', ']']
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+
+    EQ_OP  error (nonassociative)
+    GE_OP  error (nonassociative)
+    LE_OP  error (nonassociative)
+    NE_OP  error (nonassociative)
+    '>'    error (nonassociative)
+    '<'    error (nonassociative)
+
+    $default  reduce using rule 69 (expression)
+
+    Conflict between rule 69 and token EQ_OP resolved as an error (%nonassoc EQ_OP).
+    Conflict between rule 69 and token GE_OP resolved as an error (%nonassoc GE_OP).
+    Conflict between rule 69 and token LE_OP resolved as an error (%nonassoc LE_OP).
+    Conflict between rule 69 and token NE_OP resolved as an error (%nonassoc NE_OP).
+    Conflict between rule 69 and token '|' resolved as reduce ('|' < '>').
+    Conflict between rule 69 and token '&' resolved as reduce ('&' < '>').
+    Conflict between rule 69 and token '>' resolved as an error (%nonassoc '>').
+    Conflict between rule 69 and token '<' resolved as an error (%nonassoc '<').
+    Conflict between rule 69 and token '+' resolved as shift ('>' < '+').
+    Conflict between rule 69 and token '-' resolved as shift ('>' < '-').
+    Conflict between rule 69 and token '*' resolved as shift ('>' < '*').
+    Conflict between rule 69 and token '/' resolved as shift ('>' < '/').
+    Conflict between rule 69 and token '%' resolved as shift ('>' < '%').
+
+
+State 106
+
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   70           | expression '<' expression .  ['|', '&', ';', ')', ',', ']']
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+
+    EQ_OP  error (nonassociative)
+    GE_OP  error (nonassociative)
+    LE_OP  error (nonassociative)
+    NE_OP  error (nonassociative)
+    '>'    error (nonassociative)
+    '<'    error (nonassociative)
+
+    $default  reduce using rule 70 (expression)
+
+    Conflict between rule 70 and token EQ_OP resolved as an error (%nonassoc EQ_OP).
+    Conflict between rule 70 and token GE_OP resolved as an error (%nonassoc GE_OP).
+    Conflict between rule 70 and token LE_OP resolved as an error (%nonassoc LE_OP).
+    Conflict between rule 70 and token NE_OP resolved as an error (%nonassoc NE_OP).
+    Conflict between rule 70 and token '|' resolved as reduce ('|' < '<').
+    Conflict between rule 70 and token '&' resolved as reduce ('&' < '<').
+    Conflict between rule 70 and token '>' resolved as an error (%nonassoc '>').
+    Conflict between rule 70 and token '<' resolved as an error (%nonassoc '<').
+    Conflict between rule 70 and token '+' resolved as shift ('<' < '+').
+    Conflict between rule 70 and token '-' resolved as shift ('<' < '-').
+    Conflict between rule 70 and token '*' resolved as shift ('<' < '*').
+    Conflict between rule 70 and token '/' resolved as shift ('<' < '/').
+    Conflict between rule 70 and token '%' resolved as shift ('<' < '%').
+
+
+State 107
+
+   62 expression: expression . '+' expression
+   62           | expression '+' expression .  [EQ_OP, GE_OP, LE_OP, NE_OP, '|', '&', '>', '<', '+', '-', ';', ')', ',', ']']
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+
+    $default  reduce using rule 62 (expression)
+
+    Conflict between rule 62 and token EQ_OP resolved as reduce (EQ_OP < '+').
+    Conflict between rule 62 and token GE_OP resolved as reduce (GE_OP < '+').
+    Conflict between rule 62 and token LE_OP resolved as reduce (LE_OP < '+').
+    Conflict between rule 62 and token NE_OP resolved as reduce (NE_OP < '+').
+    Conflict between rule 62 and token '|' resolved as reduce ('|' < '+').
+    Conflict between rule 62 and token '&' resolved as reduce ('&' < '+').
+    Conflict between rule 62 and token '>' resolved as reduce ('>' < '+').
+    Conflict between rule 62 and token '<' resolved as reduce ('<' < '+').
+    Conflict between rule 62 and token '+' resolved as reduce (%left '+').
+    Conflict between rule 62 and token '-' resolved as reduce (%left '-').
+    Conflict between rule 62 and token '*' resolved as shift ('+' < '*').
+    Conflict between rule 62 and token '/' resolved as shift ('+' < '/').
+    Conflict between rule 62 and token '%' resolved as shift ('+' < '%').
+
+
+State 108
+
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   63           | expression '-' expression .  [EQ_OP, GE_OP, LE_OP, NE_OP, '|', '&', '>', '<', '+', '-', ';', ')', ',', ']']
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+
+    $default  reduce using rule 63 (expression)
+
+    Conflict between rule 63 and token EQ_OP resolved as reduce (EQ_OP < '-').
+    Conflict between rule 63 and token GE_OP resolved as reduce (GE_OP < '-').
+    Conflict between rule 63 and token LE_OP resolved as reduce (LE_OP < '-').
+    Conflict between rule 63 and token NE_OP resolved as reduce (NE_OP < '-').
+    Conflict between rule 63 and token '|' resolved as reduce ('|' < '-').
+    Conflict between rule 63 and token '&' resolved as reduce ('&' < '-').
+    Conflict between rule 63 and token '>' resolved as reduce ('>' < '-').
+    Conflict between rule 63 and token '<' resolved as reduce ('<' < '-').
+    Conflict between rule 63 and token '+' resolved as reduce (%left '+').
+    Conflict between rule 63 and token '-' resolved as reduce (%left '-').
+    Conflict between rule 63 and token '*' resolved as shift ('-' < '*').
+    Conflict between rule 63 and token '/' resolved as shift ('-' < '/').
+    Conflict between rule 63 and token '%' resolved as shift ('-' < '%').
+
+
+State 109
+
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   64           | expression '*' expression .  [EQ_OP, GE_OP, LE_OP, NE_OP, '|', '&', '>', '<', '+', '-', '*', '/', '%', ';', ')', ',', ']']
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+
+    $default  reduce using rule 64 (expression)
+
+    Conflict between rule 64 and token EQ_OP resolved as reduce (EQ_OP < '*').
+    Conflict between rule 64 and token GE_OP resolved as reduce (GE_OP < '*').
+    Conflict between rule 64 and token LE_OP resolved as reduce (LE_OP < '*').
+    Conflict between rule 64 and token NE_OP resolved as reduce (NE_OP < '*').
+    Conflict between rule 64 and token '|' resolved as reduce ('|' < '*').
+    Conflict between rule 64 and token '&' resolved as reduce ('&' < '*').
+    Conflict between rule 64 and token '>' resolved as reduce ('>' < '*').
+    Conflict between rule 64 and token '<' resolved as reduce ('<' < '*').
+    Conflict between rule 64 and token '+' resolved as reduce ('+' < '*').
+    Conflict between rule 64 and token '-' resolved as reduce ('-' < '*').
+    Conflict between rule 64 and token '*' resolved as reduce (%left '*').
+    Conflict between rule 64 and token '/' resolved as reduce (%left '/').
+    Conflict between rule 64 and token '%' resolved as reduce (%left '%').
+
+
+State 110
+
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   65           | expression '/' expression .  [EQ_OP, GE_OP, LE_OP, NE_OP, '|', '&', '>', '<', '+', '-', '*', '/', '%', ';', ')', ',', ']']
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+
+    $default  reduce using rule 65 (expression)
+
+    Conflict between rule 65 and token EQ_OP resolved as reduce (EQ_OP < '/').
+    Conflict between rule 65 and token GE_OP resolved as reduce (GE_OP < '/').
+    Conflict between rule 65 and token LE_OP resolved as reduce (LE_OP < '/').
+    Conflict between rule 65 and token NE_OP resolved as reduce (NE_OP < '/').
+    Conflict between rule 65 and token '|' resolved as reduce ('|' < '/').
+    Conflict between rule 65 and token '&' resolved as reduce ('&' < '/').
+    Conflict between rule 65 and token '>' resolved as reduce ('>' < '/').
+    Conflict between rule 65 and token '<' resolved as reduce ('<' < '/').
+    Conflict between rule 65 and token '+' resolved as reduce ('+' < '/').
+    Conflict between rule 65 and token '-' resolved as reduce ('-' < '/').
+    Conflict between rule 65 and token '*' resolved as reduce (%left '*').
+    Conflict between rule 65 and token '/' resolved as reduce (%left '/').
+    Conflict between rule 65 and token '%' resolved as reduce (%left '%').
+
+
+State 111
+
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   66           | expression '%' expression .  [EQ_OP, GE_OP, LE_OP, NE_OP, '|', '&', '>', '<', '+', '-', '*', '/', '%', ';', ')', ',', ']']
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+
+    $default  reduce using rule 66 (expression)
+
+    Conflict between rule 66 and token EQ_OP resolved as reduce (EQ_OP < '%').
+    Conflict between rule 66 and token GE_OP resolved as reduce (GE_OP < '%').
+    Conflict between rule 66 and token LE_OP resolved as reduce (LE_OP < '%').
+    Conflict between rule 66 and token NE_OP resolved as reduce (NE_OP < '%').
+    Conflict between rule 66 and token '|' resolved as reduce ('|' < '%').
+    Conflict between rule 66 and token '&' resolved as reduce ('&' < '%').
+    Conflict between rule 66 and token '>' resolved as reduce ('>' < '%').
+    Conflict between rule 66 and token '<' resolved as reduce ('<' < '%').
+    Conflict between rule 66 and token '+' resolved as reduce ('+' < '%').
+    Conflict between rule 66 and token '-' resolved as reduce ('-' < '%').
+    Conflict between rule 66 and token '*' resolved as reduce (%left '*').
+    Conflict between rule 66 and token '/' resolved as reduce (%left '/').
+    Conflict between rule 66 and token '%' resolved as reduce (%left '%').
+
+
+State 112
+
+   29 statement: '{' $@2 statements '}' .
+
+    $default  reduce using rule 29 (statement)
+
+
+State 113
+
+   13 function: . function IDENTIFIER params
+   14         | . IDENTIFIER params
+   24 function_definition: VOID . function
+   25                    | VOID . function IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 56
+
+    function  go to state 137
+
+
+State 114
+
+   13 function: . function IDENTIFIER params
+   14         | . IDENTIFIER params
+   22 function_definition: var_type . function
+   23                    | var_type . function IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 56
+
+    function  go to state 138
+
+
+State 115
+
+   20 function_definition_block: FUNCTION function_definition . '{' $@1 statements '}'
+   21                          | FUNCTION function_definition . '{' '}'
+
+    '{'  shift, and go to state 139
+
+
+State 116
+
+   31 statement: var_type IDENTIFIER '[' NUMBER_LITERAL . ']' ';'
+
+    ']'  shift, and go to state 140
+
+
+State 117
+
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+   91 arg_list: arg_list ',' expression .  [')', ',']
+
+    EQ_OP  shift, and go to state 66
+    GE_OP  shift, and go to state 67
+    LE_OP  shift, and go to state 68
+    NE_OP  shift, and go to state 69
+    '|'    shift, and go to state 70
+    '&'    shift, and go to state 71
+    '>'    shift, and go to state 72
+    '<'    shift, and go to state 73
+    '+'    shift, and go to state 74
+    '-'    shift, and go to state 75
+    '*'    shift, and go to state 76
+    '/'    shift, and go to state 77
+    '%'    shift, and go to state 78
+
+    $default  reduce using rule 91 (arg_list)
+
+
+State 118
+
+   16 params: '(' ')' .
+
+    $default  reduce using rule 16 (params)
+
+
+State 119
+
+   18 param_list: var_type . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 141
+
+
+State 120
+
+   15 params: '(' param_list . ')'
+   17 param_list: param_list . ',' var_type IDENTIFIER
+
+    ')'  shift, and go to state 142
+    ','  shift, and go to state 143
+
+
+State 121
+
+   13 function: function IDENTIFIER params .
+
+    $default  reduce using rule 13 (function)
+
+
+State 122
+
+   33 statement: IF '(' expression ')' statement .  [$end, IDENTIFIER, NUMBER, STRING, BOOLEAN, FUNCTION, IF, WHILE, BREAK, CONTINUE, PRINT, SCAN, SUCCESSFUL, FAILED, '{', '}']
+   34          | IF '(' expression ')' statement . ELSE statement
+
+    ELSE  shift, and go to state 144
+
+    $default  reduce using rule 33 (statement)
+
+    Conflict between rule 33 and token ELSE resolved as shift (IFX < ELSE).
+
+
+State 123
+
+   50 while_statement: IDENTIFIER . '=' expression ';'
+   53                | IDENTIFIER . INC_OP ';'
+   54                | IDENTIFIER . DEC_OP ';'
+   88 function_call: IDENTIFIER . args
+   89 args: . '(' arg_list ')'
+   90     | . '(' ')'
+
+    INC_OP  shift, and go to state 145
+    DEC_OP  shift, and go to state 146
+    '('     shift, and go to state 24
+    '='     shift, and go to state 147
+
+    args  go to state 26
+
+
+State 124
+
+   48 while_statement: IF . '(' expression ')' statement
+   49                | IF . '(' expression ')' statement ELSE statement
+
+    '('  shift, and go to state 148
+
+
+State 125
+
+   47 while_statement: WHILE . '(' expression ')' while_statement
+
+    '('  shift, and go to state 149
+
+
+State 126
+
+   55 while_statement: BREAK . ';'
+
+    ';'  shift, and go to state 150
+
+
+State 127
+
+   56 while_statement: CONTINUE . ';'
+
+    ';'  shift, and go to state 151
+
+
+State 128
+
+   51 while_statement: PRINT . expression ';'
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 152
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 129
+
+   52 while_statement: SCAN . IDENTIFIER ';'
+
+    IDENTIFIER  shift, and go to state 153
+
+
+State 130
+
+   57 while_statement: SUCCESSFUL . EXIT ';'
+
+    EXIT  shift, and go to state 154
+
+
+State 131
+
+   58 while_statement: FAILED . EXIT ';'
+
+    EXIT  shift, and go to state 155
+
+
+State 132
+
+   43 $@3: . %empty
+   44 while_statement: '{' . $@3 while_statements '}'
+
+    $default  reduce using rule 43 ($@3)
+
+    $@3  go to state 156
+
+
+State 133
+
+   45 while_statement: var_type . IDENTIFIER ';'
+   46                | var_type . IDENTIFIER '[' NUMBER_LITERAL ']' ';'
+
+    IDENTIFIER  shift, and go to state 157
+
+
+State 134
+
+   32 statement: WHILE '(' expression ')' while_statement .
+
+    $default  reduce using rule 32 (statement)
+
+
+State 135
+
+   59 while_statement: function_call_statement . ';'
+
+    ';'  shift, and go to state 158
+
+
+State 136
+
+   78 expression: IDENTIFIER '[' expression ']' .
+
+    $default  reduce using rule 78 (expression)
+
+
+State 137
+
+   13 function: function . IDENTIFIER params
+   24 function_definition: VOID function .  ['{']
+   25                    | VOID function . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 159
+
+    $default  reduce using rule 24 (function_definition)
+
+
+State 138
+
+   13 function: function . IDENTIFIER params
+   22 function_definition: var_type function .  ['{']
+   23                    | var_type function . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 160
+
+    $default  reduce using rule 22 (function_definition)
+
+
+State 139
+
+   19 $@1: . %empty  [IDENTIFIER, NUMBER, STRING, BOOLEAN, IF, WHILE, PRINT, SCAN, SUCCESSFUL, FAILED, '{']
+   20 function_definition_block: FUNCTION function_definition '{' . $@1 statements '}'
+   21                          | FUNCTION function_definition '{' . '}'
+
+    '}'  shift, and go to state 161
+
+    $default  reduce using rule 19 ($@1)
+
+    $@1  go to state 162
+
+
+State 140
+
+   31 statement: var_type IDENTIFIER '[' NUMBER_LITERAL ']' . ';'
+
+    ';'  shift, and go to state 163
+
+
+State 141
+
+   18 param_list: var_type IDENTIFIER .
+
+    $default  reduce using rule 18 (param_list)
+
+
+State 142
+
+   15 params: '(' param_list ')' .
+
+    $default  reduce using rule 15 (params)
+
+
+State 143
+
+   10 var_type: . STRING
+   11         | . NUMBER
+   12         | . BOOLEAN
+   17 param_list: param_list ',' . var_type IDENTIFIER
+
+    NUMBER   shift, and go to state 2
+    STRING   shift, and go to state 3
+    BOOLEAN  shift, and go to state 4
+
+    var_type  go to state 164
+
+
+State 144
+
+   10 var_type: . STRING
+   11         | . NUMBER
+   12         | . BOOLEAN
+   29 statement: . '{' $@2 statements '}'
+   30          | . var_type IDENTIFIER ';'
+   31          | . var_type IDENTIFIER '[' NUMBER_LITERAL ']' ';'
+   32          | . WHILE '(' expression ')' while_statement
+   33          | . IF '(' expression ')' statement
+   34          | . IF '(' expression ')' statement ELSE statement
+   34          | IF '(' expression ')' statement ELSE . statement
+   35          | . IDENTIFIER '=' expression ';'
+   36          | . PRINT expression ';'
+   37          | . SCAN IDENTIFIER ';'
+   38          | . IDENTIFIER INC_OP ';'
+   39          | . IDENTIFIER DEC_OP ';'
+   40          | . SUCCESSFUL EXIT ';'
+   41          | . FAILED EXIT ';'
+   42          | . function_call_statement ';'
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER  shift, and go to state 1
+    NUMBER      shift, and go to state 2
+    STRING      shift, and go to state 3
+    BOOLEAN     shift, and go to state 4
+    IF          shift, and go to state 6
+    WHILE       shift, and go to state 7
+    PRINT       shift, and go to state 8
+    SCAN        shift, and go to state 9
+    SUCCESSFUL  shift, and go to state 10
+    FAILED      shift, and go to state 11
+    '{'         shift, and go to state 12
+
+    var_type                 go to state 17
+    statement                go to state 165
+    function_call_statement  go to state 20
+    function_call            go to state 21
+
+
+State 145
+
+   53 while_statement: IDENTIFIER INC_OP . ';'
+
+    ';'  shift, and go to state 166
+
+
+State 146
+
+   54 while_statement: IDENTIFIER DEC_OP . ';'
+
+    ';'  shift, and go to state 167
+
+
+State 147
+
+   50 while_statement: IDENTIFIER '=' . expression ';'
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 168
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 148
+
+   48 while_statement: IF '(' . expression ')' statement
+   49                | IF '(' . expression ')' statement ELSE statement
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 169
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 149
+
+   47 while_statement: WHILE '(' . expression ')' while_statement
+   62 expression: . expression '+' expression
+   63           | . expression '-' expression
+   64           | . expression '*' expression
+   65           | . expression '/' expression
+   66           | . expression '%' expression
+   67           | . IDENTIFIER INC_OP
+   68           | . IDENTIFIER DEC_OP
+   69           | . expression '>' expression
+   70           | . expression '<' expression
+   71           | . expression '&' expression
+   72           | . expression '|' expression
+   73           | . expression EQ_OP expression
+   74           | . expression GE_OP expression
+   75           | . expression LE_OP expression
+   76           | . expression NE_OP expression
+   77           | . '-' expression
+   78           | . IDENTIFIER '[' expression ']'
+   79           | . IDENTIFIER
+   80           | . NUMBER_LITERAL
+   81           | . STRING_LITERAL
+   82           | . TRUE_LITERAL
+   83           | . FALSE_LITERAL
+   84           | . function_call_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER      shift, and go to state 32
+    STRING_LITERAL  shift, and go to state 33
+    NUMBER_LITERAL  shift, and go to state 34
+    TRUE_LITERAL    shift, and go to state 35
+    FALSE_LITERAL   shift, and go to state 36
+    '-'             shift, and go to state 37
+
+    expression               go to state 170
+    function_call_statement  go to state 39
+    function_call            go to state 21
+
+
+State 150
+
+   55 while_statement: BREAK ';' .
+
+    $default  reduce using rule 55 (while_statement)
+
+
+State 151
+
+   56 while_statement: CONTINUE ';' .
+
+    $default  reduce using rule 56 (while_statement)
+
+
+State 152
+
+   51 while_statement: PRINT expression . ';'
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+
+    EQ_OP  shift, and go to state 66
+    GE_OP  shift, and go to state 67
+    LE_OP  shift, and go to state 68
+    NE_OP  shift, and go to state 69
+    '|'    shift, and go to state 70
+    '&'    shift, and go to state 71
+    '>'    shift, and go to state 72
+    '<'    shift, and go to state 73
+    '+'    shift, and go to state 74
+    '-'    shift, and go to state 75
+    '*'    shift, and go to state 76
+    '/'    shift, and go to state 77
+    '%'    shift, and go to state 78
+    ';'    shift, and go to state 171
+
+
+State 153
+
+   52 while_statement: SCAN IDENTIFIER . ';'
+
+    ';'  shift, and go to state 172
+
+
+State 154
+
+   57 while_statement: SUCCESSFUL EXIT . ';'
+
+    ';'  shift, and go to state 173
+
+
+State 155
+
+   58 while_statement: FAILED EXIT . ';'
+
+    ';'  shift, and go to state 174
+
+
+State 156
+
+   10 var_type: . STRING
+   11         | . NUMBER
+   12         | . BOOLEAN
+   44 while_statement: . '{' $@3 while_statements '}'
+   44                | '{' $@3 . while_statements '}'
+   45                | . var_type IDENTIFIER ';'
+   46                | . var_type IDENTIFIER '[' NUMBER_LITERAL ']' ';'
+   47                | . WHILE '(' expression ')' while_statement
+   48                | . IF '(' expression ')' statement
+   49                | . IF '(' expression ')' statement ELSE statement
+   50                | . IDENTIFIER '=' expression ';'
+   51                | . PRINT expression ';'
+   52                | . SCAN IDENTIFIER ';'
+   53                | . IDENTIFIER INC_OP ';'
+   54                | . IDENTIFIER DEC_OP ';'
+   55                | . BREAK ';'
+   56                | . CONTINUE ';'
+   57                | . SUCCESSFUL EXIT ';'
+   58                | . FAILED EXIT ';'
+   59                | . function_call_statement ';'
+   60 while_statements: . while_statements while_statement
+   61                 | . while_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER  shift, and go to state 123
+    NUMBER      shift, and go to state 2
+    STRING      shift, and go to state 3
+    BOOLEAN     shift, and go to state 4
+    IF          shift, and go to state 124
+    WHILE       shift, and go to state 125
+    BREAK       shift, and go to state 126
+    CONTINUE    shift, and go to state 127
+    PRINT       shift, and go to state 128
+    SCAN        shift, and go to state 129
+    SUCCESSFUL  shift, and go to state 130
+    FAILED      shift, and go to state 131
+    '{'         shift, and go to state 132
+
+    var_type                 go to state 133
+    while_statement          go to state 175
+    while_statements         go to state 176
+    function_call_statement  go to state 135
+    function_call            go to state 21
+
+
+State 157
+
+   45 while_statement: var_type IDENTIFIER . ';'
+   46                | var_type IDENTIFIER . '[' NUMBER_LITERAL ']' ';'
+
+    ';'  shift, and go to state 177
+    '['  shift, and go to state 178
+
+
+State 158
+
+   59 while_statement: function_call_statement ';' .
+
+    $default  reduce using rule 59 (while_statement)
+
+
+State 159
+
+   13 function: function IDENTIFIER . params
+   15 params: . '(' param_list ')'
+   16       | . '(' ')'
+   25 function_definition: VOID function IDENTIFIER .  ['{']
+
+    '('  shift, and go to state 92
+
+    $default  reduce using rule 25 (function_definition)
+
+    params  go to state 121
+
+
+State 160
+
+   13 function: function IDENTIFIER . params
+   15 params: . '(' param_list ')'
+   16       | . '(' ')'
+   23 function_definition: var_type function IDENTIFIER .  ['{']
+
+    '('  shift, and go to state 92
+
+    $default  reduce using rule 23 (function_definition)
+
+    params  go to state 121
+
+
+State 161
+
+   21 function_definition_block: FUNCTION function_definition '{' '}' .
+
+    $default  reduce using rule 21 (function_definition_block)
+
+
+State 162
+
+   10 var_type: . STRING
+   11         | . NUMBER
+   12         | . BOOLEAN
+   20 function_definition_block: FUNCTION function_definition '{' $@1 . statements '}'
+   26 statements: . statements statement
+   27           | . statement
+   29 statement: . '{' $@2 statements '}'
+   30          | . var_type IDENTIFIER ';'
+   31          | . var_type IDENTIFIER '[' NUMBER_LITERAL ']' ';'
+   32          | . WHILE '(' expression ')' while_statement
+   33          | . IF '(' expression ')' statement
+   34          | . IF '(' expression ')' statement ELSE statement
+   35          | . IDENTIFIER '=' expression ';'
+   36          | . PRINT expression ';'
+   37          | . SCAN IDENTIFIER ';'
+   38          | . IDENTIFIER INC_OP ';'
+   39          | . IDENTIFIER DEC_OP ';'
+   40          | . SUCCESSFUL EXIT ';'
+   41          | . FAILED EXIT ';'
+   42          | . function_call_statement ';'
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER  shift, and go to state 1
+    NUMBER      shift, and go to state 2
+    STRING      shift, and go to state 3
+    BOOLEAN     shift, and go to state 4
+    IF          shift, and go to state 6
+    WHILE       shift, and go to state 7
+    PRINT       shift, and go to state 8
+    SCAN        shift, and go to state 9
+    SUCCESSFUL  shift, and go to state 10
+    FAILED      shift, and go to state 11
+    '{'         shift, and go to state 12
+
+    var_type                 go to state 17
+    statements               go to state 179
+    statement                go to state 19
+    function_call_statement  go to state 20
+    function_call            go to state 21
+
+
+State 163
+
+   31 statement: var_type IDENTIFIER '[' NUMBER_LITERAL ']' ';' .
+
+    $default  reduce using rule 31 (statement)
+
+
+State 164
+
+   17 param_list: param_list ',' var_type . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 180
+
+
+State 165
+
+   34 statement: IF '(' expression ')' statement ELSE statement .
+
+    $default  reduce using rule 34 (statement)
+
+
+State 166
+
+   53 while_statement: IDENTIFIER INC_OP ';' .
+
+    $default  reduce using rule 53 (while_statement)
+
+
+State 167
+
+   54 while_statement: IDENTIFIER DEC_OP ';' .
+
+    $default  reduce using rule 54 (while_statement)
+
+
+State 168
+
+   50 while_statement: IDENTIFIER '=' expression . ';'
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+
+    EQ_OP  shift, and go to state 66
+    GE_OP  shift, and go to state 67
+    LE_OP  shift, and go to state 68
+    NE_OP  shift, and go to state 69
+    '|'    shift, and go to state 70
+    '&'    shift, and go to state 71
+    '>'    shift, and go to state 72
+    '<'    shift, and go to state 73
+    '+'    shift, and go to state 74
+    '-'    shift, and go to state 75
+    '*'    shift, and go to state 76
+    '/'    shift, and go to state 77
+    '%'    shift, and go to state 78
+    ';'    shift, and go to state 181
+
+
+State 169
+
+   48 while_statement: IF '(' expression . ')' statement
+   49                | IF '(' expression . ')' statement ELSE statement
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+
+    EQ_OP  shift, and go to state 66
+    GE_OP  shift, and go to state 67
+    LE_OP  shift, and go to state 68
+    NE_OP  shift, and go to state 69
+    '|'    shift, and go to state 70
+    '&'    shift, and go to state 71
+    '>'    shift, and go to state 72
+    '<'    shift, and go to state 73
+    '+'    shift, and go to state 74
+    '-'    shift, and go to state 75
+    '*'    shift, and go to state 76
+    '/'    shift, and go to state 77
+    '%'    shift, and go to state 78
+    ')'    shift, and go to state 182
+
+
+State 170
+
+   47 while_statement: WHILE '(' expression . ')' while_statement
+   62 expression: expression . '+' expression
+   63           | expression . '-' expression
+   64           | expression . '*' expression
+   65           | expression . '/' expression
+   66           | expression . '%' expression
+   69           | expression . '>' expression
+   70           | expression . '<' expression
+   71           | expression . '&' expression
+   72           | expression . '|' expression
+   73           | expression . EQ_OP expression
+   74           | expression . GE_OP expression
+   75           | expression . LE_OP expression
+   76           | expression . NE_OP expression
+
+    EQ_OP  shift, and go to state 66
+    GE_OP  shift, and go to state 67
+    LE_OP  shift, and go to state 68
+    NE_OP  shift, and go to state 69
+    '|'    shift, and go to state 70
+    '&'    shift, and go to state 71
+    '>'    shift, and go to state 72
+    '<'    shift, and go to state 73
+    '+'    shift, and go to state 74
+    '-'    shift, and go to state 75
+    '*'    shift, and go to state 76
+    '/'    shift, and go to state 77
+    '%'    shift, and go to state 78
+    ')'    shift, and go to state 183
+
+
+State 171
+
+   51 while_statement: PRINT expression ';' .
+
+    $default  reduce using rule 51 (while_statement)
+
+
+State 172
+
+   52 while_statement: SCAN IDENTIFIER ';' .
+
+    $default  reduce using rule 52 (while_statement)
+
+
+State 173
+
+   57 while_statement: SUCCESSFUL EXIT ';' .
+
+    $default  reduce using rule 57 (while_statement)
+
+
+State 174
+
+   58 while_statement: FAILED EXIT ';' .
+
+    $default  reduce using rule 58 (while_statement)
+
+
+State 175
+
+   61 while_statements: while_statement .
+
+    $default  reduce using rule 61 (while_statements)
+
+
+State 176
+
+   10 var_type: . STRING
+   11         | . NUMBER
+   12         | . BOOLEAN
+   44 while_statement: . '{' $@3 while_statements '}'
+   44                | '{' $@3 while_statements . '}'
+   45                | . var_type IDENTIFIER ';'
+   46                | . var_type IDENTIFIER '[' NUMBER_LITERAL ']' ';'
+   47                | . WHILE '(' expression ')' while_statement
+   48                | . IF '(' expression ')' statement
+   49                | . IF '(' expression ')' statement ELSE statement
+   50                | . IDENTIFIER '=' expression ';'
+   51                | . PRINT expression ';'
+   52                | . SCAN IDENTIFIER ';'
+   53                | . IDENTIFIER INC_OP ';'
+   54                | . IDENTIFIER DEC_OP ';'
+   55                | . BREAK ';'
+   56                | . CONTINUE ';'
+   57                | . SUCCESSFUL EXIT ';'
+   58                | . FAILED EXIT ';'
+   59                | . function_call_statement ';'
+   60 while_statements: while_statements . while_statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER  shift, and go to state 123
+    NUMBER      shift, and go to state 2
+    STRING      shift, and go to state 3
+    BOOLEAN     shift, and go to state 4
+    IF          shift, and go to state 124
+    WHILE       shift, and go to state 125
+    BREAK       shift, and go to state 126
+    CONTINUE    shift, and go to state 127
+    PRINT       shift, and go to state 128
+    SCAN        shift, and go to state 129
+    SUCCESSFUL  shift, and go to state 130
+    FAILED      shift, and go to state 131
+    '{'         shift, and go to state 132
+    '}'         shift, and go to state 184
+
+    var_type                 go to state 133
+    while_statement          go to state 185
+    function_call_statement  go to state 135
+    function_call            go to state 21
+
+
+State 177
+
+   45 while_statement: var_type IDENTIFIER ';' .
+
+    $default  reduce using rule 45 (while_statement)
+
+
+State 178
+
+   46 while_statement: var_type IDENTIFIER '[' . NUMBER_LITERAL ']' ';'
+
+    NUMBER_LITERAL  shift, and go to state 186
+
+
+State 179
+
+   10 var_type: . STRING
+   11         | . NUMBER
+   12         | . BOOLEAN
+   20 function_definition_block: FUNCTION function_definition '{' $@1 statements . '}'
+   26 statements: statements . statement
+   29 statement: . '{' $@2 statements '}'
+   30          | . var_type IDENTIFIER ';'
+   31          | . var_type IDENTIFIER '[' NUMBER_LITERAL ']' ';'
+   32          | . WHILE '(' expression ')' while_statement
+   33          | . IF '(' expression ')' statement
+   34          | . IF '(' expression ')' statement ELSE statement
+   35          | . IDENTIFIER '=' expression ';'
+   36          | . PRINT expression ';'
+   37          | . SCAN IDENTIFIER ';'
+   38          | . IDENTIFIER INC_OP ';'
+   39          | . IDENTIFIER DEC_OP ';'
+   40          | . SUCCESSFUL EXIT ';'
+   41          | . FAILED EXIT ';'
+   42          | . function_call_statement ';'
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER  shift, and go to state 1
+    NUMBER      shift, and go to state 2
+    STRING      shift, and go to state 3
+    BOOLEAN     shift, and go to state 4
+    IF          shift, and go to state 6
+    WHILE       shift, and go to state 7
+    PRINT       shift, and go to state 8
+    SCAN        shift, and go to state 9
+    SUCCESSFUL  shift, and go to state 10
+    FAILED      shift, and go to state 11
+    '{'         shift, and go to state 12
+    '}'         shift, and go to state 187
+
+    var_type                 go to state 17
+    statement                go to state 47
+    function_call_statement  go to state 20
+    function_call            go to state 21
+
+
+State 180
+
+   17 param_list: param_list ',' var_type IDENTIFIER .
+
+    $default  reduce using rule 17 (param_list)
+
+
+State 181
+
+   50 while_statement: IDENTIFIER '=' expression ';' .
+
+    $default  reduce using rule 50 (while_statement)
+
+
+State 182
+
+   10 var_type: . STRING
+   11         | . NUMBER
+   12         | . BOOLEAN
+   29 statement: . '{' $@2 statements '}'
+   30          | . var_type IDENTIFIER ';'
+   31          | . var_type IDENTIFIER '[' NUMBER_LITERAL ']' ';'
+   32          | . WHILE '(' expression ')' while_statement
+   33          | . IF '(' expression ')' statement
+   34          | . IF '(' expression ')' statement ELSE statement
+   35          | . IDENTIFIER '=' expression ';'
+   36          | . PRINT expression ';'
+   37          | . SCAN IDENTIFIER ';'
+   38          | . IDENTIFIER INC_OP ';'
+   39          | . IDENTIFIER DEC_OP ';'
+   40          | . SUCCESSFUL EXIT ';'
+   41          | . FAILED EXIT ';'
+   42          | . function_call_statement ';'
+   48 while_statement: IF '(' expression ')' . statement
+   49                | IF '(' expression ')' . statement ELSE statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER  shift, and go to state 1
+    NUMBER      shift, and go to state 2
+    STRING      shift, and go to state 3
+    BOOLEAN     shift, and go to state 4
+    IF          shift, and go to state 6
+    WHILE       shift, and go to state 7
+    PRINT       shift, and go to state 8
+    SCAN        shift, and go to state 9
+    SUCCESSFUL  shift, and go to state 10
+    FAILED      shift, and go to state 11
+    '{'         shift, and go to state 12
+
+    var_type                 go to state 17
+    statement                go to state 188
+    function_call_statement  go to state 20
+    function_call            go to state 21
+
+
+State 183
+
+   10 var_type: . STRING
+   11         | . NUMBER
+   12         | . BOOLEAN
+   44 while_statement: . '{' $@3 while_statements '}'
+   45                | . var_type IDENTIFIER ';'
+   46                | . var_type IDENTIFIER '[' NUMBER_LITERAL ']' ';'
+   47                | . WHILE '(' expression ')' while_statement
+   47                | WHILE '(' expression ')' . while_statement
+   48                | . IF '(' expression ')' statement
+   49                | . IF '(' expression ')' statement ELSE statement
+   50                | . IDENTIFIER '=' expression ';'
+   51                | . PRINT expression ';'
+   52                | . SCAN IDENTIFIER ';'
+   53                | . IDENTIFIER INC_OP ';'
+   54                | . IDENTIFIER DEC_OP ';'
+   55                | . BREAK ';'
+   56                | . CONTINUE ';'
+   57                | . SUCCESSFUL EXIT ';'
+   58                | . FAILED EXIT ';'
+   59                | . function_call_statement ';'
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER  shift, and go to state 123
+    NUMBER      shift, and go to state 2
+    STRING      shift, and go to state 3
+    BOOLEAN     shift, and go to state 4
+    IF          shift, and go to state 124
+    WHILE       shift, and go to state 125
+    BREAK       shift, and go to state 126
+    CONTINUE    shift, and go to state 127
+    PRINT       shift, and go to state 128
+    SCAN        shift, and go to state 129
+    SUCCESSFUL  shift, and go to state 130
+    FAILED      shift, and go to state 131
+    '{'         shift, and go to state 132
+
+    var_type                 go to state 133
+    while_statement          go to state 189
+    function_call_statement  go to state 135
+    function_call            go to state 21
+
+
+State 184
+
+   44 while_statement: '{' $@3 while_statements '}' .
+
+    $default  reduce using rule 44 (while_statement)
+
+
+State 185
+
+   60 while_statements: while_statements while_statement .
+
+    $default  reduce using rule 60 (while_statements)
+
+
+State 186
+
+   46 while_statement: var_type IDENTIFIER '[' NUMBER_LITERAL . ']' ';'
+
+    ']'  shift, and go to state 190
+
+
+State 187
+
+   20 function_definition_block: FUNCTION function_definition '{' $@1 statements '}' .
+
+    $default  reduce using rule 20 (function_definition_block)
+
+
+State 188
+
+   48 while_statement: IF '(' expression ')' statement .  [$end, IDENTIFIER, NUMBER, STRING, BOOLEAN, FUNCTION, IF, WHILE, BREAK, CONTINUE, PRINT, SCAN, SUCCESSFUL, FAILED, '{', '}']
+   49                | IF '(' expression ')' statement . ELSE statement
+
+    ELSE  shift, and go to state 191
+
+    $default  reduce using rule 48 (while_statement)
+
+    Conflict between rule 48 and token ELSE resolved as shift (IFX < ELSE).
+
+
+State 189
+
+   47 while_statement: WHILE '(' expression ')' while_statement .
+
+    $default  reduce using rule 47 (while_statement)
+
+
+State 190
+
+   46 while_statement: var_type IDENTIFIER '[' NUMBER_LITERAL ']' . ';'
+
+    ';'  shift, and go to state 192
+
+
+State 191
+
+   10 var_type: . STRING
+   11         | . NUMBER
+   12         | . BOOLEAN
+   29 statement: . '{' $@2 statements '}'
+   30          | . var_type IDENTIFIER ';'
+   31          | . var_type IDENTIFIER '[' NUMBER_LITERAL ']' ';'
+   32          | . WHILE '(' expression ')' while_statement
+   33          | . IF '(' expression ')' statement
+   34          | . IF '(' expression ')' statement ELSE statement
+   35          | . IDENTIFIER '=' expression ';'
+   36          | . PRINT expression ';'
+   37          | . SCAN IDENTIFIER ';'
+   38          | . IDENTIFIER INC_OP ';'
+   39          | . IDENTIFIER DEC_OP ';'
+   40          | . SUCCESSFUL EXIT ';'
+   41          | . FAILED EXIT ';'
+   42          | . function_call_statement ';'
+   49 while_statement: IF '(' expression ')' statement ELSE . statement
+   85 function_call_statement: . function_call
+   86                        | . function_call IDENTIFIER
+   87 function_call: . function_call IDENTIFIER args
+   88              | . IDENTIFIER args
+
+    IDENTIFIER  shift, and go to state 1
+    NUMBER      shift, and go to state 2
+    STRING      shift, and go to state 3
+    BOOLEAN     shift, and go to state 4
+    IF          shift, and go to state 6
+    WHILE       shift, and go to state 7
+    PRINT       shift, and go to state 8
+    SCAN        shift, and go to state 9
+    SUCCESSFUL  shift, and go to state 10
+    FAILED      shift, and go to state 11
+    '{'         shift, and go to state 12
+
+    var_type                 go to state 17
+    statement                go to state 193
+    function_call_statement  go to state 20
+    function_call            go to state 21
+
+
+State 192
+
+   46 while_statement: var_type IDENTIFIER '[' NUMBER_LITERAL ']' ';' .
+
+    $default  reduce using rule 46 (while_statement)
+
+
+State 193
+
+   49 while_statement: IF '(' expression ')' statement ELSE statement .
+
+    $default  reduce using rule 49 (while_statement)

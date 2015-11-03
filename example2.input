@@ -1,0 +1,38 @@
+number x1;
+number x2;
+
+print "Enter 2 numbers:\n";
+
+print "x1: ";
+scan x1;
+print "x2: ";
+scan x2;
+print "\n";
+
+print "x1 + x2 = ";
+print x1 + x2;
+
+print "\nx1 - x2 = ";
+print x1 - x2;
+
+print "\nx1 * x2 = ";
+print x1 * x2;
+
+print "\nx1 / x2 = ";
+print x1 / x2;
+
+if(x1 > 0 & x2 > 0)
+{
+	print "\n\nBoth numbers are positive!\n\n";
+}
+else
+{
+	if(x1 < 0 & x2 < 0)
+	{
+		print "\n\nBoth numbers are negative!\n\n";
+	}
+	else
+	{
+		print "\n\nOne of them is positive and the other is negative!\n\n";
+	}
+}
