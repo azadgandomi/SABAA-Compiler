@@ -1,4 +1,5 @@
-﻿
+﻿SABAA is a compiler for a C based language with the folowing syntax:
+ 
 ******************************************************************* Introduction *******************************************************************
 
 Code file consists of 3 parts :
